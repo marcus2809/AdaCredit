@@ -168,7 +168,7 @@ namespace AdaCredit
                 .RuleFor(t => t.DestinationBankAccount, faker => faker.PickRandom(ClientRepository.Clients).Account.BankAccount.Replace("-", ""))
                 .RuleFor(t => t.TypeTransaction, faker => faker.PickRandom<TransactionType>())
                 .RuleFor(t => t.Value, faker => decimal.Round(faker.Random.Decimal(0.0M, 9999.99M), 2))
-                .Generate(500);
+                .Generate(100);
 
             foreach (var transaction in transactions)
             {

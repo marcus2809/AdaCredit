@@ -75,7 +75,6 @@ namespace AdaCredit.Domain
 
             } while (!passwordsMatch);
 
-            //Console.Clear();
             Console.WriteLine("Senha cadastrada");
 
             Console.WriteLine("Pressione enter para sair...");
