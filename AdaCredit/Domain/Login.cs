@@ -64,7 +64,6 @@ namespace AdaCredit.Domain
             var cleanPassword = Console.ReadLine();
             var concatPassword = string.Concat(cleanPassword, saltPassword);
             var hashedPassword = HashPassword(concatPassword);
-            //Console.WriteLine($"O hash para sua senha é: {hashedPassword}");
 
             var passwordsMatch = false;
 

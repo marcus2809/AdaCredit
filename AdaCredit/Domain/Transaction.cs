@@ -31,9 +31,47 @@ namespace AdaCredit.Domain
         {
             Account? account;
 
-            if(DestinationBankCode == "777")
+            if (OriginBankCode == "777" && DestinationBankCode == "777")
             {
-                account = AccountRepository.GetAccountByBankAccountAndAgency(DestinationBankAccount, OriginAgencyCode);
+                account = AccountRepository.GetAccountByBankAccountAndAgency(DestinationBankAccount, DestinationAgencyCode);
+                Account? originAccount = AccountRepository.GetAccountByBankAccountAndAgency(OriginBankAccount, OriginAgencyCode);
+                
+                if (account == null)
+                {
+                    Details = "Conta de destino não existe";
+                    return false;
+                }
+                if (originAccount == null)
+                {
+                    Details = "Conta de origem não existe";
+                    return false;
+                }
+                if (TypeTransaction == TransactionType.DOC) 
+                {
+                    bool debt = DebtAccountDoc(originAccount);
+                    if (!debt)
+                        return false;
+                    return CreditAccountDoc(account);
+                }
+                    
+
+                if (TypeTransaction == TransactionType.TED)
+                {
+                    bool debt = DebtAccountTed(originAccount);
+                    if (!debt)
+                        return false;
+                    return CreditAccountTed(account);
+                }
+
+                if (TypeTransaction == TransactionType.TEF)
+                {
+                    return CreditAccountTef(account, originAccount);
+                }
+            }
+
+            else if(DestinationBankCode == "777")
+            {
+                account = AccountRepository.GetAccountByBankAccountAndAgency(DestinationBankAccount, DestinationAgencyCode);
                 
                 if(account == null)
                 {
@@ -45,23 +83,14 @@ namespace AdaCredit.Domain
                 
                 if(TypeTransaction==TransactionType.TED)
                     return CreditAccountTed(account);
-             
-                if(TypeTransaction==TransactionType.TEF) 
+
+                if (TypeTransaction == TransactionType.TEF)
                 {
-                    if (OriginBankCode != "777")
-                    {
-                        Details = "Transferência TEF só pode ser realizada entre contas do mesmo banco";
-                        return false;
-                    }
-                    Account? originAccount = AccountRepository.GetAccountByBankAccountAndAgency(OriginBankAccount, OriginAgencyCode);
-                    if(originAccount == null)
-                    {
-                        Details = "Conta de origem não existe";
-                        return false;
-                    }
-                    return CreditAccountTef(account, originAccount);
+                    Details = "Transferência TEF só pode ser realizada entre contas do mesmo banco";
+                    return false;
                 }
             }
+
             else if (OriginBankCode == "777")
             {
                 account = AccountRepository.GetAccountByBankAccountAndAgency(DestinationBankAccount, OriginAgencyCode);
@@ -76,24 +105,15 @@ namespace AdaCredit.Domain
 
                 if (TypeTransaction == TransactionType.TED)
                     return DebtAccountTed(account);
-                
+
                 if (TypeTransaction == TransactionType.TEF)
                 {
-                    if (DestinationBankCode != "777")
-                    {
-                        Details = "Transferência TEF só pode ser realizada entre contas do mesmo banco";
-                        return false;
-                    }
-                    Account? destinationAccount = AccountRepository.GetAccountByBankAccountAndAgency(OriginBankAccount, OriginAgencyCode);
-                    if (destinationAccount == null)
-                    {
-                        Details = "Conta de destino não existe";
-                        return false;
-                    }
-                    return CreditAccountTef(account, destinationAccount);
+                    Details = "Transferência TEF só pode ser realizada entre contas do mesmo banco";
+                    return false;
                 }
             }
-            Details = "Nenhuma das contas pertecem a AdaCredit";
+
+            Details = "Nenhuma das contas pertecem à AdaCredit";
             return false;
         }
 

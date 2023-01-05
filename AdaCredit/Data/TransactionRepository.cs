@@ -16,14 +16,15 @@ namespace AdaCredit.Data
         public static void LoadTransaction(Transaction transaction)
             => PendingTransactions.Add(transaction);  
         
-
         public static void ProcessTransactions() 
         {
             foreach (var transaction in PendingTransactions)
             {
                 var completed = transaction.ProcessTransaction();
-                if (completed) CompletedTransactions.Add(transaction);
-                else FailedTransactions.Add(transaction);
+                if (completed) 
+                    CompletedTransactions.Add(transaction);
+                else if(!completed && transaction.Details != "Nenhuma das contas pertecem à AdaCredit") 
+                    FailedTransactions.Add(transaction);
             }
             PendingTransactions.Clear();
         }

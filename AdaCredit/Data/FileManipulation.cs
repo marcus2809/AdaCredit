@@ -99,6 +99,13 @@ namespace AdaCredit.Data
             var desktopFolder = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
             var transactionsFile = Path.Combine(desktopFolder, "Transactions/pending.csv");
 
+            string dir = Path.Combine(desktopFolder, "Transactions");
+            // If directory does not exist, create it
+            if (!Directory.Exists(dir))
+            {
+                Directory.CreateDirectory(dir);
+            }
+
             try
             {
                 using var reader = new StreamReader(transactionsFile);
