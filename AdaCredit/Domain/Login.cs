@@ -48,6 +48,8 @@ namespace AdaCredit.Domain
 
             } while (!logged);
 
+            if (employee != null) employee.LoginUser();
+
             Console.Clear();
             Console.WriteLine("Usuário logado");
             Console.WriteLine("Pressione enter para ir para o menu...");

@@ -221,7 +221,7 @@ namespace AdaCredit.Data
                         Username= record[4],
                         HashPassword= record[5],
                         SaltPassword= record[6],
-                        //LastLogin = record[7]
+                        LastLogin = DateTime.Parse(record[7]),
                     };
 
                     EmployeeRepository.LoadEmployee(employee);
